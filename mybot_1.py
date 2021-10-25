@@ -3,6 +3,7 @@ from telegram import Update,KeyboardButton
 from telegram.ext import Updater, CommandHandler, CallbackContext, CallbackQueryHandler, ConversationHandler, MessageHandler, Filters
 from telegram.inline.inlinekeyboardmarkup import InlineKeyboardMarkup
 import mysql.connector
+import backend
 from backend import analiz
 
 data = analiz()
@@ -184,7 +185,7 @@ def f_sozlamalar(update:Update,context:CallbackContext):
         return STATE_SHAXSIY_KABINET
 
 
-updater = Updater('2015393431:AAH5GBbVKBUCqWHAcdsPhiUdshtSb6__aMw', use_context=True)
+updater = Updater(backend.TOKEN, use_context=True)
 
 conv_handler = ConversationHandler(
     entry_points = [
