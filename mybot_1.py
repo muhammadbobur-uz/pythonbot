@@ -3,7 +3,6 @@ from telegram import Update,KeyboardButton
 from telegram.ext import Updater, CommandHandler, CallbackContext, CallbackQueryHandler, ConversationHandler, MessageHandler, Filters
 from telegram.inline.inlinekeyboardmarkup import InlineKeyboardMarkup
 import mysql.connector
-import backend
 from backend import analiz
 
 data = analiz()
@@ -45,6 +44,7 @@ STATE_SHAXSIY_KABINET = 5
 STATE_SOZLAMALAR = 6
 
 def start(update: Update, context: CallbackContext):
+    data.__init__()
     global name
     name = update.effective_user.first_name
     id = update.effective_user.id
@@ -59,6 +59,7 @@ def start(update: Update, context: CallbackContext):
     return STATE_BEGIN
 
 def f_b(update: Update, context: CallbackContext):
+    data.__init__()
     b_name = update.message.text
     if b_name == b1:
         update.message.reply_html(f'Телефон рақамингизни +9989** *** ** **\nшаклда юборинг, '
@@ -72,18 +73,22 @@ def f_b(update: Update, context: CallbackContext):
         update.message.reply_html(f'Telefon raqamingizni +9989** *** ** **\nshaklda yuboring, '
                                   f'yoki "📱 Raqam yuborish"\ntugmasini bosing: ',
                                   reply_markup=t_button())
+
     return STATE_PHONE
 
 def f_back(update:Update, context: CallbackContext):
+    data.__init__()
     update.message.reply_html("<b>Тилни танланг..\n\nВыберите язык..\n\nTilni tanlang..</b>", reply_markup=b_button())
     return STATE_BEGIN
 
 def f_sms(update:Update, context: CallbackContext):
+    data.__init__()
     query = update.callback_query
     query.message.reply_html("<b>♻️Qaytadan ...</b>", reply_markup=t_button())
     return STATE_PHONE
 
 def phone_entity_handler(update: Update, context: CallbackContext):
+    data.__init__()
     pne = list(filter(lambda e: e.type == 'phone_number', update.message.entities))[0]
     phone_number = update.message.text[pne.offset : pne.offset + pne.length]
     print(update.message.text, update.message.entities[0], phone_number)
@@ -105,6 +110,7 @@ def phone_entity_handler(update: Update, context: CallbackContext):
     print(context.chat_data)
 
 def phone_contact_handler(update: Update, context: CallbackContext):
+    data.__init__()
     phone_number = update.message.contact
     context.chat_data.update({
         'phone_number': phone_number['phone_number']
@@ -124,10 +130,12 @@ def phone_contact_handler(update: Update, context: CallbackContext):
 
 
 def phone_resent_handler(update: Update, context: CallbackContext):
+    data.__init__()
     update.message.reply_html(f'<b>{name}</b> edi siz bilan mutaxassislarimiz bog\'lanishi uchun telefon nomeringizni '
                               f'kiriting: ')
 
 def check_sms(update:Update, context: CallbackContext):
+    data.__init__()
     if int(update.message.text) == int(context.chat_data['id']):
         update.message.reply_html("✅✅✅ AgroZamin botiga xush kelibsiz", reply_markup = k_button())
         data.mb_insert(d1=context.chat_data['id'], d2=f"{context.chat_data['name']}", d3=f"{context.chat_data['phone_number']}")
@@ -136,9 +144,11 @@ def check_sms(update:Update, context: CallbackContext):
         update.message.reply_html(f"<b>{update.message.text}</b> ❌ Kod kiritishda xatolik ❗\nTekshirib qaytadan kiriting:\n\n\n<b>Ma\'lumot uchun saytimiz: 👇👇👇\nhttps://dev.agrozamin.uz/</b>")
 
 def mbdelete(update:Update,context:CallbackContext):
+    data.__init__()
     data.mb_delete()
 
 def f_kabinet(update:Update, context:CallbackContext):
+    data.__init__()
     k_name = update.message.text
     if k_name == k1:
         update.message.reply_html(f"{k1} tanlandi")
@@ -156,6 +166,7 @@ def f_kabinet(update:Update, context:CallbackContext):
         update.message.reply_html(f"{k5} tanlandi")
 
 def f_biz_bilan(update:Update, context:CallbackContext):
+    data.__init__()
     query = update.callback_query
     if query.data == 'sayt_xato':
         query.message.reply_html(f'<b>{faq1}</b> tanlandi')
@@ -170,6 +181,7 @@ def f_biz_bilan(update:Update, context:CallbackContext):
         return STATE_KOBINET
 
 def f_sh_kabinet(update:Update,context:CallbackContext):
+    data.__init__()
     sh_kabinet = update.message.text
     if sh_kabinet == sh5:
         update.message.reply_html(f"{sh5} tanlandi", reply_markup = s_button())
@@ -179,13 +191,14 @@ def f_sh_kabinet(update:Update,context:CallbackContext):
         return STATE_KOBINET
 
 def f_sozlamalar(update:Update,context:CallbackContext):
+    data.__init__()
     s_soz = update.message.text
     if s_soz == s6:
         update.message.reply_html(f"{s6} tanlandi", reply_markup = sh_button())
         return STATE_SHAXSIY_KABINET
 
 
-updater = Updater(backend.TOKEN, use_context=True)
+updater = Updater('1350277281:AAHIZ1BvGdVHa8zCo5vXseHE5Q8WyFyWkCk', use_context=True)
 
 conv_handler = ConversationHandler(
     entry_points = [
@@ -222,7 +235,6 @@ conv_handler = ConversationHandler(
     },
     fallbacks= []
 )
-
 updater.dispatcher.add_handler(conv_handler)
 
 updater.start_polling()
