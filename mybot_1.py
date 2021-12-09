@@ -198,7 +198,7 @@ def f_sozlamalar(update:Update,context:CallbackContext):
         return STATE_SHAXSIY_KABINET
 
 
-updater = Updater('1350277281:AAHIZ1BvGdVHa8zCo5vXseHE5Q8WyFyWkCk', use_context=True)
+updater = Updater('TOKEN', use_context=True)
 
 conv_handler = ConversationHandler(
     entry_points = [
