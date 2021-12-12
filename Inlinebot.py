@@ -133,7 +133,7 @@ conv_handler = ConversationHandler(
     fallbacks= []
 )
 
-updater = Updater('5062910933:AAF5u_AZ419ftxh2-zyAGk_Ihc-Pc13fe5E', use_context = True)
+updater = Updater(TOKEN, use_context = True)
 updater.dispatcher.add_handler(conv_handler)
 updater.dispatcher.add_handler(InlineQueryHandler(inline_query))
 
